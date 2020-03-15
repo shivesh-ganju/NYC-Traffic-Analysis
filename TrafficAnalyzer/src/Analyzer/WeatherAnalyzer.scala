@@ -1,0 +1,5 @@
+package Analyzer
+
+class WeatherAnalyzer {
+  
+}
