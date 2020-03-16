@@ -1,0 +1,4 @@
+[0m[[0m[31merror[0m] [0m[0m/home/shivesh/Desktop/BDAD/Testing/src/main/scala/Analyzer/WeatherAnalyzer.scala:2:12: object apache is not a member of package org[0m
+[0m[[0m[31merror[0m] [0m[0mimport org.apache.spark.SparkContext[0m
+[0m[[0m[31merror[0m] [0m[0m           ^[0m
+[0m[[0m[31merror[0m] [0m[0mone error found[0m

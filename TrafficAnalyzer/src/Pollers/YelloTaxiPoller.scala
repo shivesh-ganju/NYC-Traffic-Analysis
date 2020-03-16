@@ -1,5 +1,0 @@
-package Pollers
-
-class YelloTaxiPoller {
-  
-}
