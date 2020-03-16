@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: geocoder
+Implementation-Version: 1.1.0
+Specification-Vendor: com.koddi
+Specification-Title: geocoder
+Implementation-Vendor-Id: com.koddi
+Specification-Version: 1.1.0
+Implementation-URL: https://koddidev.github.io/geocoder/
+Implementation-Vendor: com.koddi
+

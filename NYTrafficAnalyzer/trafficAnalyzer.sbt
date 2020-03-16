@@ -1,4 +1,5 @@
 sparkVersion := "2.2.0"
-name := "Testing"
+name := "NYTrafficAnalyzer"
 version := "1.0"
 scalaVersion := "2.11.12"
+libraryDependencies += "com.koddi" %% "geocoder" % "1.1.0" from "file:///home/shivesh/.ivy2/cache/com.koddi/geocoder_2.11/srcs/geocoder_2.11-1.1.0-sources.jar"
