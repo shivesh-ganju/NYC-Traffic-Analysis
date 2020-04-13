@@ -2,24 +2,47 @@ import org.apache.spark.SparkContext
 import Gateway._ 
 import org.apache.spark.SparkConf
 import Pollers._
+import org.apache.spark.SparkContext
+import org.apache.spark.SparkContext._
+import org.apache.spark.SparkConf
+import scala.collection.mutable.ArrayBuffer
+import org.apache.spark.sql.SQLContext
+import Preprocessors._
+import Analyzer._
 object initApp {
    def main(args: Array[String]){
-//    val conf = new SparkConf().setAppName("test")
-//    val sc = new SparkContext(conf)
-//    sc.setLogLevel("ERROR")
-//    val yellowTaxiPoller = new YellowTaxiPoller(sc)
-//    val greenTaxiPoller = new GreenTaxipoller(sc)
-//    val fhvTaxiPoller = new FHVPoller(sc)
-//    val yellowRDD = yellowTaxiPoller.poll
-//    val greenRDD = greenTaxiPoller.poll
-//    val fhvRDD = fhvTaxiPoller.poll
-//    println(yellowRDD.count)
-//    println(fhvRDD.count)
-//    println(greenRDD.count)
-//    yellowRDD.take(2).foreach(println)
-//    greenRDD.take(2).foreach(println)
-//    fhvRDD.take(2).foreach(println)
-     val geo = new APIGateway
-     geo.test
+   val conf = new SparkConf().setAppName("test")
+   val sc = new SparkContext(conf)
+   sc.setLogLevel("ERROR")
+   val sqlContext = new SQLContext(sc)
+   val yellowTaxiPoller = new YellowTaxiPoller(sc)
+   val greenTaxiPoller = new GreenTaxiPoller(sc)
+    println("Polling for Data..............................................")
+    val yellow_rdd1 = yellowTaxiPoller.poll0914
+    yellow_rdd1.take(4).foreach(println)
+    val yellow_rdd2 = yellowTaxiPoller.poll1516
+    yellow_rdd2.take(4).foreach(println)
+    val yellow_rdd3 = yellowTaxiPoller.poll1718
+    yellow_rdd3.take(4).foreach(println)
+    val yellow_rdd4 = yellowTaxiPoller.poll19
+    yellow_rdd4.take(4).foreach(println)
+    val green_rdd1 = greenTaxiPoller.poll1314
+    green_rdd1.take(4).foreach(println)
+    val green_rdd2 = greenTaxiPoller.poll1516
+    green_rdd2.take(4).foreach(println)
+    val green_rdd3 = greenTaxiPoller.poll1718
+    green_rdd3.take(4).foreach(println)
+    val green_rdd4 = greenTaxiPoller.poll19
+    green_rdd4.take(4).foreach(println)
+    val yellow_clean = new YellowTaxiCleaner
+    val green_clean = new GreenTaxiCleaner
+    println("Cleaning Data.................................................")
+    val cleanYellowRDD=yellow_clean.clean(yellow_rdd1,yellow_rdd2,yellow_rdd3,yellow_rdd4)
+    val cleanGreenRDD=green_clean.clean(green_rdd1,green_rdd2,green_rdd3,green_rdd4)
+    println("Analyzing Data................................................")
+    val yellowAnalysis = new YellowTaxiAnalyzer
+    //yellowAnalysis.createTotalYearCount(cleanYellowRDD)
+    val greenAnalysis = new GreenTaxiAnalyzer
+    greenAnalysis.createTotalYearCount(cleanGreenRDD)
   }
 }
