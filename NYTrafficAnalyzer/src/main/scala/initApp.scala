@@ -17,6 +17,7 @@ object initApp {
    val sqlContext = new SQLContext(sc)
    val yellowTaxiPoller = new YellowTaxiPoller(sc)
    val greenTaxiPoller = new GreenTaxiPoller(sc)
+   val weatherPoller = new WeatherPoller(sc)
     println("Polling for Data..............................................")
     val yellow_rdd1 = yellowTaxiPoller.poll0914
     yellow_rdd1.take(4).foreach(println)
@@ -34,15 +35,25 @@ object initApp {
     green_rdd3.take(4).foreach(println)
     val green_rdd4 = greenTaxiPoller.poll19
     green_rdd4.take(4).foreach(println)
+    val weather_rdd = weatherPoller.poll
     val yellow_clean = new YellowTaxiCleaner
     val green_clean = new GreenTaxiCleaner
+    val weather_clean = new WeatherCleaner
     println("Cleaning Data.................................................")
     val cleanYellowRDD=yellow_clean.clean(yellow_rdd1,yellow_rdd2,yellow_rdd3,yellow_rdd4)
+    cleanYellowRDD.map(line=>line(1)).distinct().collect().foreach(println)
     val cleanGreenRDD=green_clean.clean(green_rdd1,green_rdd2,green_rdd3,green_rdd4)
+    val cleanWeatherRDD = weather_clean.clean(weather_rdd)
     println("Analyzing Data................................................")
     val yellowAnalysis = new YellowTaxiAnalyzer
     //yellowAnalysis.createTotalYearCount(cleanYellowRDD)
     val greenAnalysis = new GreenTaxiAnalyzer
-    greenAnalysis.createTotalYearCount(cleanGreenRDD)
+    //greenAnalysis.createTotalYearCount(cleanGreenRDD)
+    val weatherAnalysis = new WeatherAnalyzer
+    val priceAnalysis = new PriceAnalyzer
+    //weatherAnalysis.generateYellowTaxiWeatherRainCount(cleanGreenRDD,cleanWeatherRDD)
+    //weatherAnalysis.generateYellowTaxiWeatherRainAverage(cleanYellowRDD,cleanWeatherRDD)
+    //weatherAnalysis.generateYellowTaxiWeatherSnowAverage(cleanYellowRDD,cleanWeatherRDD)
+    priceAnalysis.avgPricePerPassengerCount(cleanYellowRDD)
   }
 }
