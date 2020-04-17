@@ -78,10 +78,12 @@ class YellowTaxiCleaner extends Serializable {
             arr_new=arr_new:+arr(i)
             }
         }
+        val time_start_bucket = ((time_start.substring(0,2).toInt)%24).toString +"-" + ((time_start.substring(0,2).toInt + 1)%24).toString
+        val time_end_bucket = ((time_end.substring(0,2).toInt)%24).toString +"-" + ((time_end.substring(0,2).toInt + 1)%24).toString
         arr_new=arr_new:+date_start
-        arr_new=arr_new:+time_start
+        arr_new=arr_new:+time_start_bucket
         arr_new=arr_new:+date_end
-        arr_new=arr_new:+time_end
+        arr_new=arr_new:+time_end_bucket
         arr_new
     }
     def modify1516(arr:Array[String])={
@@ -103,10 +105,12 @@ class YellowTaxiCleaner extends Serializable {
             arr_new=arr_new:+arr(i)
             }
         }
+        val time_start_bucket = ((time_start.substring(0,2).toInt)%24).toString +"-" + ((time_start.substring(0,2).toInt + 1)%24).toString
+        val time_end_bucket = ((time_end.substring(0,2).toInt)%24).toString +"-" + ((time_end.substring(0,2).toInt + 1)%24).toString
         arr_new=arr_new:+date_start
-        arr_new=arr_new:+time_start
+        arr_new=arr_new:+time_start_bucket
         arr_new=arr_new:+date_end
-        arr_new=arr_new:+time_end
+        arr_new=arr_new:+time_end_bucket
         arr_new
     }
     def modify1718(arr:Array[String])={
@@ -131,10 +135,12 @@ class YellowTaxiCleaner extends Serializable {
                 arr_new=arr_new:+arr(i)
             }
         }
+        val time_start_bucket = ((time_start.substring(0,2).toInt)%24).toString +"-" + ((time_start.substring(0,2).toInt + 1)%24).toString
+        val time_end_bucket = ((time_end.substring(0,2).toInt)%24).toString +"-" + ((time_end.substring(0,2).toInt + 1)%24).toString
         arr_new=arr_new:+date_start
-        arr_new=arr_new:+time_start
+        arr_new=arr_new:+time_start_bucket
         arr_new=arr_new:+date_end
-        arr_new=arr_new:+time_end
+        arr_new=arr_new:+time_end_bucket
         arr_new
     }
     def modify19(arr:Array[String])={
@@ -159,10 +165,12 @@ class YellowTaxiCleaner extends Serializable {
                 arr_new=arr_new:+arr(i)
             }
         }
+        val time_start_bucket = ((time_start.substring(0,2).toInt)%24).toString +"-" + ((time_start.substring(0,2).toInt + 1)%24).toString
+        val time_end_bucket = ((time_end.substring(0,2).toInt)%24).toString +"-" + ((time_end.substring(0,2).toInt + 1)%24).toString
         arr_new=arr_new:+date_start
-        arr_new=arr_new:+time_start
+        arr_new=arr_new:+time_start_bucket
         arr_new=arr_new:+date_end
-        arr_new=arr_new:+time_end
+        arr_new=arr_new:+time_end_bucket
         arr_new
     }
     def checkNA(arr : Seq[String])={

@@ -18,42 +18,48 @@ object initApp {
    val yellowTaxiPoller = new YellowTaxiPoller(sc)
    val greenTaxiPoller = new GreenTaxiPoller(sc)
    val weatherPoller = new WeatherPoller(sc)
+   val fhvTaxiPoller = new FHVTaxiPoller(sc)
     println("Polling for Data..............................................")
     val yellow_rdd1 = yellowTaxiPoller.poll0914
-    yellow_rdd1.take(4).foreach(println)
     val yellow_rdd2 = yellowTaxiPoller.poll1516
-    yellow_rdd2.take(4).foreach(println)
     val yellow_rdd3 = yellowTaxiPoller.poll1718
-    yellow_rdd3.take(4).foreach(println)
     val yellow_rdd4 = yellowTaxiPoller.poll19
-    yellow_rdd4.take(4).foreach(println)
     val green_rdd1 = greenTaxiPoller.poll1314
-    green_rdd1.take(4).foreach(println)
     val green_rdd2 = greenTaxiPoller.poll1516
-    green_rdd2.take(4).foreach(println)
     val green_rdd3 = greenTaxiPoller.poll1718
-    green_rdd3.take(4).foreach(println)
     val green_rdd4 = greenTaxiPoller.poll19
-    green_rdd4.take(4).foreach(println)
+
+    val fhv_rdd1 = fhvTaxiPoller.poll15
+    val fhv_rdd2 = fhvTaxiPoller.poll16
+    val fhv_rdd3 = fhvTaxiPoller.poll17
+    val fhv_rdd4 = fhvTaxiPoller.poll18
+    val fhv_rdd5 = fhvTaxiPoller.poll19
+    val licenseMappingsRDD = fhvTaxiPoller.pollTaxiMapping
     val weather_rdd = weatherPoller.poll
+ 
+    println("Cleaning Data.................................................")
+
     val yellow_clean = new YellowTaxiCleaner
     val green_clean = new GreenTaxiCleaner
     val weather_clean = new WeatherCleaner
-    println("Cleaning Data.................................................")
+    val Fhv_clean = new FHVTaxiCleaner
     val cleanYellowRDD=yellow_clean.clean(yellow_rdd1,yellow_rdd2,yellow_rdd3,yellow_rdd4)
-    cleanYellowRDD.map(line=>line(1)).distinct().collect().foreach(println)
+    //cleanYellowRDD.map(line=>line(1)).distinct().collect().foreach(println)
     val cleanGreenRDD=green_clean.clean(green_rdd1,green_rdd2,green_rdd3,green_rdd4)
     val cleanWeatherRDD = weather_clean.clean(weather_rdd)
+    val cleanFhvRDD=Fhv_clean.clean(fhv_rdd1,fhv_rdd2,fhv_rdd3,fhv_rdd4,fhv_rdd5)
+
     println("Analyzing Data................................................")
-    val yellowAnalysis = new YellowTaxiAnalyzer
-    //yellowAnalysis.createTotalYearCount(cleanYellowRDD)
-    val greenAnalysis = new GreenTaxiAnalyzer
+    //val countAnalysis = new CountAnalyzer(sqlContext,cleanFhvRDD,licenseMappingsRDD)
+    //countAnalysis.createSQLTable(cleanYellowRDD,cleanGreenRDD)
+    //val greenAnalysis = new GreenTaxiAnalyzer
     //greenAnalysis.createTotalYearCount(cleanGreenRDD)
     val weatherAnalysis = new WeatherAnalyzer
-    val priceAnalysis = new PriceAnalyzer
+    val priceAnalysis = new PriceAnalyzer(sqlContext)
     //weatherAnalysis.generateYellowTaxiWeatherRainCount(cleanGreenRDD,cleanWeatherRDD)
     //weatherAnalysis.generateYellowTaxiWeatherRainAverage(cleanYellowRDD,cleanWeatherRDD)
     //weatherAnalysis.generateYellowTaxiWeatherSnowAverage(cleanYellowRDD,cleanWeatherRDD)
-    priceAnalysis.avgPricePerPassengerCount(cleanYellowRDD)
+    //priceAnalysis.createTimeCountSQLTable(cleanYellowRDD,cleanGreenRDD)
+    priceAnalysis.createTimePriceSQLTable(cleanYellowRDD,cleanGreenRDD)
   }
 }
