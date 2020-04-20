@@ -90,9 +90,9 @@ class YellowTaxiCleaner extends Serializable {
         val time_start_bucket = ((time_start.substring(0,2).toInt)%24).toString +"-" + ((time_start.substring(0,2).toInt + 1)%24).toString
         val time_end_bucket = ((time_end.substring(0,2).toInt)%24).toString +"-" + ((time_end.substring(0,2).toInt + 1)%24).toString
         arr_new=arr_new:+date_start
-        arr_new=arr_new:+time_start
+        arr_new=arr_new:+time_start_bucket
         arr_new=arr_new:+date_end
-        arr_new=arr_new:+time_end
+        arr_new=arr_new:+time_end_bucket
         arr_new=arr_new:+diff.toString
         arr_new=arr_new:+test.toString
         arr_new=arr_new:+payment
@@ -125,9 +125,9 @@ class YellowTaxiCleaner extends Serializable {
         val time_end_bucket = ((time_end.substring(0,2).toInt)%24).toString +"-" + ((time_end.substring(0,2).toInt + 1)%24).toString
         val diff = (1.00*(t2.getTime()- t1.getTime()))/(60*60*1000)        
         arr_new=arr_new:+date_start
-        arr_new=arr_new:+time_start
+        arr_new=arr_new:+time_start_bucket
         arr_new=arr_new:+date_end
-        arr_new=arr_new:+time_end
+        arr_new=arr_new:+time_end_bucket
         arr_new=arr_new:+diff.toString
         arr_new=arr_new:+test.toString
         arr_new=arr_new:+payment
@@ -163,9 +163,9 @@ class YellowTaxiCleaner extends Serializable {
         val time_end_bucket = ((time_end.substring(0,2).toInt)%24).toString +"-" + ((time_end.substring(0,2).toInt + 1)%24).toString
         val diff = (1.00*(t2.getTime()- t1.getTime()))/(60*60*1000)        
         arr_new=arr_new:+date_start
-        arr_new=arr_new:+time_start
+        arr_new=arr_new:+time_start_bucket
         arr_new=arr_new:+date_end
-        arr_new=arr_new:+time_end
+        arr_new=arr_new:+time_end_bucket
         arr_new=arr_new:+diff.toString
         arr_new=arr_new:+test.toString
         arr_new=arr_new:+payment
@@ -201,9 +201,9 @@ class YellowTaxiCleaner extends Serializable {
         val time_end_bucket = ((time_end.substring(0,2).toInt)%24).toString +"-" + ((time_end.substring(0,2).toInt + 1)%24).toString
         val diff = (1.00*(t2.getTime()- t1.getTime()))/(60*60*1000)        
         arr_new=arr_new:+date_start
-        arr_new=arr_new:+time_start
+        arr_new=arr_new:+time_start_bucket
         arr_new=arr_new:+date_end
-        arr_new=arr_new:+time_end
+        arr_new=arr_new:+time_end_bucket
         arr_new=arr_new:+diff.toString
         arr_new=arr_new:+test.toString
         arr_new=arr_new:+payment

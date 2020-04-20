@@ -80,7 +80,7 @@ class PriceAnalyzer(val sqlContext:SQLContext) extends Serializable{
 				)
 		val finalRDD = speedRDD.map(line=>Row(line._1,line._2))
 		val speedDF = sqlContext.createDataFrame(finalRDD,schema)
-		speedDF.write.saveAsTable("sg6148.Analysis2_3")
+		//speedDF.write.saveAsTable("sg6148.Analysis2_3")
 		speedDF
 	}
 	def bucketize(num:Float)={
