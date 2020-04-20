@@ -4,9 +4,10 @@ import org.apache.spark.SparkContext._
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.sql._
 import org.apache.spark.sql.types._
+import java.io.Serializable._
 class CountAnalyzer(val sqlContext : SQLContext,
 					val fhvRDD: org.apache.spark.rdd.RDD[Seq[String]],
-					val licenseNumRDD: org.apache.spark.rdd.RDD[String]){
+					val licenseNumRDD: org.apache.spark.rdd.RDD[String]) extends Serializable{
 
 	def createTotalYearCount(taxiRDD:org.apache.spark.rdd.RDD[Seq[String]])={
 		val tempRDD = taxiRDD.map(line => (line(8).substring(0,7),1))
@@ -119,10 +120,24 @@ class CountAnalyzer(val sqlContext : SQLContext,
 							StructField("ViaTaxiCount",IntegerType,true)
 						)
 					)
-		val countDF = sqlContext.createDataFrame(transitRDD,schema)
+		val countDF = sqlContext.createDataFrame(transitRDD,schema).sort($"Year")
 		countDF.write.saveAsTable("sg6148.Analysis1_1");
 	}
-
+	def createMarketShareSQLTable={
+		import sqlContext._
+		import sqlContext.implicits._
+		val df1 = sqlContext.sql("Select *,YellowTaxiCount+coalesce(GreenTaxiCount,0)+coalesce(UberCount,0)+Coalesce(JunoTaxiCount,0)+Coalesce(ViaTaxiCount,0) as total  from sg6148.Analysis1_1")
+		val df2 = df1.select(df1("Year"),
+							 df1("YellowTaxiCount")*100/df1("total") as "YellowTaxiShare",
+							 df1("GreenTaxiCount")*100/df1("total") as "GreenTaxiShare",
+							 df1("UberCount")*100/df1("total") as "UberShare",
+							 df1("LyftCount")*100/df1("total") as "LyftShare",
+							 df1("JunoTaxiCount")*100/df1("total") as "JunoTaxiShare",
+							 df1("ViaTaxiCount")*100/df1("total") as "ViaTaxiShare"
+							 ).sort($"Year")
+		val df3 = df2.na.fill(0)
+		df3.write.saveAsTable("sg6148.Analysis1_2")
+	}
 	def getVal(value:Option[Int])={
 		if(value!=None)value.get
 		else null

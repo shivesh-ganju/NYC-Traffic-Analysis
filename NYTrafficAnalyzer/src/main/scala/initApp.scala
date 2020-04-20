@@ -52,14 +52,21 @@ object initApp {
     println("Analyzing Data................................................")
     //val countAnalysis = new CountAnalyzer(sqlContext,cleanFhvRDD,licenseMappingsRDD)
     //countAnalysis.createSQLTable(cleanYellowRDD,cleanGreenRDD)
+    //countAnalysis.createMarketShareSQLTable
+
     //val greenAnalysis = new GreenTaxiAnalyzer
     //greenAnalysis.createTotalYearCount(cleanGreenRDD)
-    val weatherAnalysis = new WeatherAnalyzer
+    //val weatherAnalysis = new WeatherAnalyzer
     val priceAnalysis = new PriceAnalyzer(sqlContext)
+    val priceDF=priceAnalysis.calculateTipSpeed(cleanYellowRDD)
+    priceDF.persist()
+    val linear_regressor = new Regressor(sqlContext,sc)
+    linear_regressor.trainAndTest(priceDF)
+    linear_regressor.trainAndTestForest(priceDF)
     //weatherAnalysis.generateYellowTaxiWeatherRainCount(cleanGreenRDD,cleanWeatherRDD)
     //weatherAnalysis.generateYellowTaxiWeatherRainAverage(cleanYellowRDD,cleanWeatherRDD)
     //weatherAnalysis.generateYellowTaxiWeatherSnowAverage(cleanYellowRDD,cleanWeatherRDD)
     //priceAnalysis.createTimeCountSQLTable(cleanYellowRDD,cleanGreenRDD)
-    priceAnalysis.createTimePriceSQLTable(cleanYellowRDD,cleanGreenRDD)
+    //priceAnalysis.createTimePriceSQLTable(cleanYellowRDD,cleanGreenRDD)
   }
 }

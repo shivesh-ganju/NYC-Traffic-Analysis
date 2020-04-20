@@ -7,7 +7,12 @@ import org.apache.spark.sql.SQLContext
 import com.databricks.spark.csv
 import org.apache.spark.sql.functions._
 import java.io.Serializable
-class YellowTaxiCleaner extends Serializable {    
+import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.util.Date
+
+class YellowTaxiCleaner extends Serializable {
+    val sdf = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss")    
     def clean0914(data1 : org.apache.spark.rdd.RDD[String]) ={
         val a = Set("2009","2010","2011","2012","2013","2014")
         val rdd11=data1.map(_.split(","))
@@ -56,7 +61,6 @@ class YellowTaxiCleaner extends Serializable {
         var rdda = rdd0914.union(rdd1516)
         rdda = rdda.union(rdd1718)
         rdda= rdda.union(rdd19)
-        //rdda.saveAsTextFile("project/clean_yellow_data2/")
         rdda
     }
     def modify0914(arr:Array[String])={
@@ -65,6 +69,10 @@ class YellowTaxiCleaner extends Serializable {
         var time_start=""
         var date_end=""
         var time_end=""
+        var payment = arr(11).toString
+        var t1 = sdf.parse(arr(1))
+        var t2 = sdf.parse(arr(2))
+        var test = t2.compareTo(t1)
         for(i<- 0 to arr.length-1){
             if(i==1){
             date_start = arr(i).split(" ")(0)
@@ -74,16 +82,20 @@ class YellowTaxiCleaner extends Serializable {
             date_end = arr(i).split(" ")(0)
             time_end = arr(i).split(" ")(1)    
             }
-            else if(i!=7&&i!=8&&i!=11&&i!=12&&i!=13&&i!=14&&i!=15&&i!=16){
+            else if(i!=7&&i!=8&&i!=11&&i!=12&&i!=13&&i!=14&&i!=3&&i!=16){
             arr_new=arr_new:+arr(i)
             }
         }
+        val diff = (1.00*(t2.getTime()- t1.getTime()))/(60*60*1000)
         val time_start_bucket = ((time_start.substring(0,2).toInt)%24).toString +"-" + ((time_start.substring(0,2).toInt + 1)%24).toString
         val time_end_bucket = ((time_end.substring(0,2).toInt)%24).toString +"-" + ((time_end.substring(0,2).toInt + 1)%24).toString
         arr_new=arr_new:+date_start
-        arr_new=arr_new:+time_start_bucket
+        arr_new=arr_new:+time_start
         arr_new=arr_new:+date_end
-        arr_new=arr_new:+time_end_bucket
+        arr_new=arr_new:+time_end
+        arr_new=arr_new:+diff.toString
+        arr_new=arr_new:+test.toString
+        arr_new=arr_new:+payment
         arr_new
     }
     def modify1516(arr:Array[String])={
@@ -92,25 +104,33 @@ class YellowTaxiCleaner extends Serializable {
         var time_start=""
         var date_end=""
         var time_end=""
+        var t1 = sdf.parse(arr(1))
+        var t2 = sdf.parse(arr(2))
+        var test = t2.compareTo(t1)
+        var payment = arr(11).toString
         for(i<- 0 to arr.length-1){
             if(i==1){
-            date_start = arr(i).split(" ")(0)
-            time_start = arr(i).split(" ")(1)
+                date_start = arr(i).split(" ")(0)
+                time_start = arr(i).split(" ")(1)
             }
             else if(i==2){
-            date_end = arr(i).split(" ")(0)
-            time_end = arr(i).split(" ")(1)    
+                date_end = arr(i).split(" ")(0)
+                time_end = arr(i).split(" ")(1)    
             }
-            else if(i!=7&&i!=8&&i!=11&&i!=12&&i!=13&&i!=14&&i!=15&&i!=16&&i!=17){
-            arr_new=arr_new:+arr(i)
+            else if(i!=7&&i!=8&&i!=11&&i!=12&&i!=13&&i!=14&&i!=3&&i!=16&&i!=17){
+                arr_new=arr_new:+arr(i)
             }
         }
         val time_start_bucket = ((time_start.substring(0,2).toInt)%24).toString +"-" + ((time_start.substring(0,2).toInt + 1)%24).toString
         val time_end_bucket = ((time_end.substring(0,2).toInt)%24).toString +"-" + ((time_end.substring(0,2).toInt + 1)%24).toString
+        val diff = (1.00*(t2.getTime()- t1.getTime()))/(60*60*1000)        
         arr_new=arr_new:+date_start
-        arr_new=arr_new:+time_start_bucket
+        arr_new=arr_new:+time_start
         arr_new=arr_new:+date_end
-        arr_new=arr_new:+time_end_bucket
+        arr_new=arr_new:+time_end
+        arr_new=arr_new:+diff.toString
+        arr_new=arr_new:+test.toString
+        arr_new=arr_new:+payment
         arr_new
     }
     def modify1718(arr:Array[String])={
@@ -119,6 +139,10 @@ class YellowTaxiCleaner extends Serializable {
         var time_start=""
         var date_end=""
         var time_end=""
+        var t1 = sdf.parse(arr(1))
+        var t2 = sdf.parse(arr(2))
+        var test = t2.compareTo(t1)
+        var payment = arr(9).toString 
         for(i<- 0 to arr.length-1){
             if(i==1){
             date_start = arr(i).split(" ")(0)
@@ -128,7 +152,7 @@ class YellowTaxiCleaner extends Serializable {
             date_end = arr(i).split(" ")(0)
             time_end = arr(i).split(" ")(1)    
             }
-            else if(i!=5&&i!=6&&i!=9&&i!=10&&i!=11&&i!=12&&i!=13&&i!=14&&i!=15){
+            else if(i!=5&&i!=6&&i!=9&&i!=10&&i!=11&&i!=12&&i!=3&&i!=14&&i!=15){
                 if(i==7||i==8){
                     arr_new=arr_new:+arr(i)
                 }
@@ -137,10 +161,14 @@ class YellowTaxiCleaner extends Serializable {
         }
         val time_start_bucket = ((time_start.substring(0,2).toInt)%24).toString +"-" + ((time_start.substring(0,2).toInt + 1)%24).toString
         val time_end_bucket = ((time_end.substring(0,2).toInt)%24).toString +"-" + ((time_end.substring(0,2).toInt + 1)%24).toString
+        val diff = (1.00*(t2.getTime()- t1.getTime()))/(60*60*1000)        
         arr_new=arr_new:+date_start
-        arr_new=arr_new:+time_start_bucket
+        arr_new=arr_new:+time_start
         arr_new=arr_new:+date_end
-        arr_new=arr_new:+time_end_bucket
+        arr_new=arr_new:+time_end
+        arr_new=arr_new:+diff.toString
+        arr_new=arr_new:+test.toString
+        arr_new=arr_new:+payment
         arr_new
     }
     def modify19(arr:Array[String])={
@@ -149,6 +177,10 @@ class YellowTaxiCleaner extends Serializable {
         var time_start=""
         var date_end=""
         var time_end=""
+        var t1 = sdf.parse(arr(1))
+        var t2 = sdf.parse(arr(2))
+        var test = t2.compareTo(t1)
+        var payment = arr(9).toString 
         for(i<- 0 to arr.length-1){
             if(i==1){
             date_start = arr(i).split(" ")(0)
@@ -158,7 +190,7 @@ class YellowTaxiCleaner extends Serializable {
             date_end = arr(i).split(" ")(0)
             time_end = arr(i).split(" ")(1)    
             }
-            else if(i!=5&&i!=6&&i!=9&&i!=10&&i!=11&&i!=12&&i!=13&&i!=14&&i!=15&&i!=17){
+            else if(i!=5&&i!=6&&i!=9&&i!=10&&i!=11&&i!=12&&i!=3&&i!=14&&i!=15&&i!=17){
                 if(i==7||i==8){
                     arr_new=arr_new:+arr(i)
                 }
@@ -167,10 +199,14 @@ class YellowTaxiCleaner extends Serializable {
         }
         val time_start_bucket = ((time_start.substring(0,2).toInt)%24).toString +"-" + ((time_start.substring(0,2).toInt + 1)%24).toString
         val time_end_bucket = ((time_end.substring(0,2).toInt)%24).toString +"-" + ((time_end.substring(0,2).toInt + 1)%24).toString
+        val diff = (1.00*(t2.getTime()- t1.getTime()))/(60*60*1000)        
         arr_new=arr_new:+date_start
-        arr_new=arr_new:+time_start_bucket
+        arr_new=arr_new:+time_start
         arr_new=arr_new:+date_end
-        arr_new=arr_new:+time_end_bucket
+        arr_new=arr_new:+time_end
+        arr_new=arr_new:+diff.toString
+        arr_new=arr_new:+test.toString
+        arr_new=arr_new:+payment
         arr_new
     }
     def checkNA(arr : Seq[String])={
