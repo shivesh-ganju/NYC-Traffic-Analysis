@@ -23,7 +23,7 @@ https://data.cityofnewyork.us/Transportation/FHV-Base-Aggregate-Report/2v9c-2k7f
 
 Project Directories and structure
 The project structure was built using sbt. However the folders have been renamed for grading purposes.
-File name : NYCTrafficAnalyzer_noncompilable
+File name : NYCTaxiAnalyzer_grading_only
 
 /app_code : This folder contains the Jar file which has the compiled code and will be used to run the application. Apart from that it contains the Tableau workbooks which has the visualizations. This also has the necessary sbt files.
 
@@ -42,7 +42,7 @@ Run the script by using python download.py
 
 Note : This project folder will not be compiled because of absence of sbt files and because of a different project structure
 
-There is another zip folder in the submission which you can check if you want to compile the code (NYCTrafficAnalyzer_compilable.zip)
+There is another zip folder in the submission which you can check if you want to compile the code (NYCTaxiAnalyzer_compilable.zip)
 
 Project structure :
 
@@ -52,7 +52,7 @@ Project structure :
 /src/main/scala/initApp.scala : Main funciton. Runs the application
 
 Compiling the code
-Please use the NYCTrafficAnalyzer_compilable.zip folder if you want to compile the code from the beginning
+Please use the NYCTaxiAnalyzer_compilable.zip folder if you want to compile the code from the beginning
 Steps:
 1)For each of the file in poller directory, change the location of the file where the data is available to your location.
 Files - FHVTaxiPoller,GreenTaxiPoller,TaxiLocationPoller,WeatherPoller,YellowTaxiPoller
@@ -64,7 +64,7 @@ save the table as <userid.tablename> so that you can view it in your dumbo accou
 
 Running the code
 You can use the built jar file to directory run the code. Or if you prefer to compile the code then you can find the jar file in the target folder of the application. Transfer the jar file to your dumbo account using scp. Then run the following command
-spark2-submit --class initApp --name "traffic" --master yarn --deploy-mode cluster --driver-memory 5G --executor-memory 4G --num-executors 40 NYTrafficAnalyzer-assembly-1.0.jar
+spark2-submit --class initApp --name "Taxi" --master yarn --deploy-mode cluster --driver-memory 5G --executor-memory 4G --num-executors 40 NYTaxiAnalyzer-assembly-1.0.jar
 This should take around 30 minutes to run the complete job
 
 Results:
