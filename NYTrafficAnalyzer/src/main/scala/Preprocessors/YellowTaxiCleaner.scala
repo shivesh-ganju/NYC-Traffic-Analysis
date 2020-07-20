@@ -10,9 +10,12 @@ import java.io.Serializable
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Date
-
+/*
+* This class cleans the Yellow taxi dataset and combines the different schemas into one uniform schema
+*/
 class YellowTaxiCleaner extends Serializable {
-    val sdf = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss")    
+    val sdf = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss")
+// Cleaning and filtering the dataset for 2009-2014    
     def clean0914(data1 : org.apache.spark.rdd.RDD[String]) ={
         val a = Set("2009","2010","2011","2012","2013","2014")
         val rdd11=data1.map(_.split(","))
@@ -23,6 +26,7 @@ class YellowTaxiCleaner extends Serializable {
             .filter(line=>a.contains(line(8).substring(0,4)))
         rdd11
     }
+// Cleaning and filtering the dataset for 2015-2016
     def clean1516(data1 : org.apache.spark.rdd.RDD[String]) ={
         val a = Set("2015","2016")
         val rdd11=data1.map(_.split(","))
@@ -33,6 +37,7 @@ class YellowTaxiCleaner extends Serializable {
             .filter(line=>a.contains(line(8).substring(0,4)))
         rdd11
     }
+// Cleaning and filtering the dataset for 2017-2018
     def clean1718(data1 : org.apache.spark.rdd.RDD[String]) ={
         val a = Set("2017","2018")
         val rdd11=data1.map(_.split(","))
@@ -43,6 +48,7 @@ class YellowTaxiCleaner extends Serializable {
             .filter(line=>a.contains(line(8).substring(0,4)))
         rdd11
     }
+// Cleaning and filtering the dataset for 2019
     def clean19(data1 : org.apache.spark.rdd.RDD[String]) ={
         val a = Set("2019")
         val rdd11=data1.map(_.split(","))
@@ -53,6 +59,7 @@ class YellowTaxiCleaner extends Serializable {
             .filter(line=>a.contains(line(8).substring(0,4)))
         rdd11
     }
+// Combines all the individually cleaned dataset and merges them into one rdd
     def clean(data1 : org.apache.spark.rdd.RDD[String],data2 : org.apache.spark.rdd.RDD[String],data3 : org.apache.spark.rdd.RDD[String],data4 : org.apache.spark.rdd.RDD[String])={
         val rdd0914 = clean0914(data1)
         val rdd1516 = clean1516(data2)
@@ -63,6 +70,7 @@ class YellowTaxiCleaner extends Serializable {
         rdda= rdda.union(rdd19)
         rdda
     }
+// Modifying the dataset 2009-2014 to a uniform schema
     def modify0914(arr:Array[String])={
         var arr_new = Seq.empty[String]
         var date_start=""
@@ -98,6 +106,7 @@ class YellowTaxiCleaner extends Serializable {
         arr_new=arr_new:+payment
         arr_new
     }
+// Modifying the dataset 2015-2016 to a uniform schema
     def modify1516(arr:Array[String])={
         var arr_new = Seq.empty[String]
         var date_start=""
@@ -133,6 +142,7 @@ class YellowTaxiCleaner extends Serializable {
         arr_new=arr_new:+payment
         arr_new
     }
+// Modifying the dataset 2017-2018 to a uniform schema
     def modify1718(arr:Array[String])={
         var arr_new = Seq.empty[String]
         var date_start=""
@@ -171,6 +181,7 @@ class YellowTaxiCleaner extends Serializable {
         arr_new=arr_new:+payment
         arr_new
     }
+// Modifying the dataset 2019 to a uniform schema
     def modify19(arr:Array[String])={
         var arr_new = Seq.empty[String]
         var date_start=""

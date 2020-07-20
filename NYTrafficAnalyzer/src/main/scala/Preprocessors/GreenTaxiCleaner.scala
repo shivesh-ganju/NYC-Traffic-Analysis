@@ -7,7 +7,11 @@ import org.apache.spark.sql.SQLContext
 import com.databricks.spark.csv
 import org.apache.spark.sql.functions._
 import java.io.Serializable
-class GreenTaxiCleaner extends Serializable {    
+/*
+* This class cleans the Green taxi dataset and combines the different schemas into one uniform schema
+*/
+class GreenTaxiCleaner extends Serializable { 
+//Cleans and filters the 2013-14 dataset
     def clean1314(data1 : org.apache.spark.rdd.RDD[String]) ={
         val a = Set("2013","2014")
         val rdd11=data1.map(_.split(","))
@@ -18,6 +22,7 @@ class GreenTaxiCleaner extends Serializable {
             .filter(line=>a.contains(line(8).substring(0,4)))
         rdd11
     }
+//Cleans and filters the 2015-16 dataset
     def clean1516(data1 : org.apache.spark.rdd.RDD[String]) ={
         val a = Set("2015","2016")
         val rdd11=data1.map(_.split(","))
@@ -28,6 +33,7 @@ class GreenTaxiCleaner extends Serializable {
             .filter(line=>a.contains(line(8).substring(0,4)))
         rdd11
     }
+//Cleans and filters the 2017-14 dataset
     def clean1718(data1 : org.apache.spark.rdd.RDD[String]) ={
         val a = Set("2017","2018")
         val rdd11=data1.map(_.split(","))
@@ -38,6 +44,7 @@ class GreenTaxiCleaner extends Serializable {
             .filter(line=>a.contains(line(8).substring(0,4)))
         rdd11
     }
+//Cleans and filters the 2019 dataset
     def clean19(data1 : org.apache.spark.rdd.RDD[String]) ={
         val a = Set("2019")
         val rdd11=data1.map(_.split(","))
@@ -48,6 +55,7 @@ class GreenTaxiCleaner extends Serializable {
             .filter(line=>a.contains(line(8).substring(0,4)))
         rdd11
     }
+// Combines all the individually cleaned dataset and merges them into one rdd
     def clean(data1 : org.apache.spark.rdd.RDD[String],data2 : org.apache.spark.rdd.RDD[String],data3 : org.apache.spark.rdd.RDD[String],data4 : org.apache.spark.rdd.RDD[String])={
         val rdd1314 = clean1314(data1)
         val rdd1516 = clean1516(data2)
@@ -59,6 +67,7 @@ class GreenTaxiCleaner extends Serializable {
         //rdda.saveAsTextFile("project/clean_green_data/")
         rdda
     }
+// Modifies the dataset for 2013-2014 into a uniform schema
     def modify1314(arr:Array[String])={
         var arr_new = Seq.empty[String]
         var date_start=""
@@ -86,6 +95,7 @@ class GreenTaxiCleaner extends Serializable {
         arr_new=arr_new:+time_end_bucket
         arr_new
     }
+// Modifies the dataset for 2015-2016 into a uniform schema
     def modify1516(arr:Array[String])={
         var arr_new = Seq.empty[String]
         var date_start=""
@@ -113,6 +123,7 @@ class GreenTaxiCleaner extends Serializable {
         arr_new=arr_new:+time_end_bucket
         arr_new
     }
+// Modifies the dataset for 2017-2018 into a uniform schema
     def modify1718(arr:Array[String])={
         var arr_new = Seq.empty[String]
         var date_start=""
@@ -143,6 +154,7 @@ class GreenTaxiCleaner extends Serializable {
         arr_new=arr_new:+time_end_bucket
         arr_new
     }
+// Modifies the dataset for 2019 into a uniform schema
     def modify19(arr:Array[String])={
         var arr_new = Seq.empty[String]
         var date_start=""

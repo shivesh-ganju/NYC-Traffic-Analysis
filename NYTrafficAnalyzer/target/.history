@@ -1,2 +1,7 @@
 reload
 eclipse with-source=true
+package
+q
+:q
+package
+last *:packageOptions

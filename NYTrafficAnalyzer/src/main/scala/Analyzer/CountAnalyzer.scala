@@ -5,10 +5,15 @@ import org.apache.spark.sql.SQLContext
 import org.apache.spark.sql._
 import org.apache.spark.sql.types._
 import java.io.Serializable._
+/*
+* This class is responsible for finding out trends between the pickups of the different types of taxis
+* as well as calculating the market share of the taxis throughout the years
+*/
 class CountAnalyzer(val sqlContext : SQLContext,
 					val fhvRDD: org.apache.spark.rdd.RDD[Seq[String]],
 					val licenseNumRDD: org.apache.spark.rdd.RDD[String]) extends Serializable{
 
+// Calculates the number of pickups in a year for each taxi type
 	def createTotalYearCount(taxiRDD:org.apache.spark.rdd.RDD[Seq[String]])={
 		val tempRDD = taxiRDD.map(line => (line(8).substring(0,7),1))
 		val countRDD = tempRDD.reduceByKey((v1,v2)=>v1+v2)
@@ -84,7 +89,9 @@ class CountAnalyzer(val sqlContext : SQLContext,
 
 		taxiByNameRDD		   		  		
 	}
-
+// Creates a Hive table which gets stored in HDFS for Tableau to get data from. This function calculates the
+// rides taken each year monthly and then joins them with other taxi datasets. Finally a dataframe is created from the RDD
+// and then written on the HDFS
 	def createSQLTable(yellowtaxi:org.apache.spark.rdd.RDD[Seq[String]],
 					   greentaxi:org.apache.spark.rdd.RDD[Seq[String]]
 					   )={
@@ -121,8 +128,9 @@ class CountAnalyzer(val sqlContext : SQLContext,
 						)
 					)
 		val countDF = sqlContext.createDataFrame(transitRDD,schema).sort($"Year")
-		countDF.write.saveAsTable("sg6148.Analysis1_1");
+		countDF.write.saveAsTable("sg6148.Analysis1_1_Final");
 	}
+// This function calculates the marketshare for each taxi type in a year and then stores in the HDFS
 	def createMarketShareSQLTable={
 		import sqlContext._
 		import sqlContext.implicits._
@@ -136,7 +144,7 @@ class CountAnalyzer(val sqlContext : SQLContext,
 							 df1("ViaTaxiCount")*100/df1("total") as "ViaTaxiShare"
 							 ).sort($"Year")
 		val df3 = df2.na.fill(0)
-		df3.write.saveAsTable("sg6148.Analysis1_2")
+		df3.write.saveAsTable("sg6148.Analysis1_2_Final")
 	}
 	def getVal(value:Option[Int])={
 		if(value!=None)value.get

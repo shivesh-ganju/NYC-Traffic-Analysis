@@ -8,8 +8,12 @@ import org.apache.spark.sql.types._
 import java.io.Serializable
 import org.apache.spark.ml.regression.{RandomForestRegressionModel, RandomForestRegressor}
 import org.apache.spark.ml.feature.VectorIndexer
-
+/*
+* This class carries out the machine learning algorithms to find out the correlation between tip and speed. Mllib has been used
+* Linear regression and Random forest model has been tested
+*/
 class Regressor(val sqlContext:SQLContext,val sc:SparkContext){
+// FUnction for training and testing Linear regression model
 	def trainAndTest(df:org.apache.spark.sql.DataFrame)={
 		import sqlContext._
 		import sqlContext.implicits._
@@ -29,9 +33,10 @@ class Regressor(val sqlContext:SQLContext,val sc:SparkContext){
 		var testing = assembler.transform(testDF)
 		val predictions = lrModel.transform(testing).drop("features").sort($"Speed")
 		println("Results saved..................................")
-		predictions.write.saveAsTable("sg6148.AnalysisML_Linear")
+		predictions.write.saveAsTable("sg6148.AnalysisML_Linear_Final")
 		//Coefficients: [-0.014994449315546594] Intercept: 16.017121331109944
 	}
+// Function for training and testing RandomForest
 	def trainAndTestForest(df:org.apache.spark.sql.DataFrame)={
 		import sqlContext._
 		import sqlContext.implicits._
@@ -45,7 +50,7 @@ class Regressor(val sqlContext:SQLContext,val sc:SparkContext){
 		println("testing the model...........................")
 		val predictions = model.transform(train)
 		val result=predictions.drop("features").drop("label").withColumnRenamed("prediction","Tip")
-		result.write.saveAsTable("sg6148.AnalysisML_Forest")
+		result.write.saveAsTable("sg6148.AnalysisML_Forest_Final")
 
 	}
 
